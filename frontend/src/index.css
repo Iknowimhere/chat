@@ -1,0 +1,37 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+div.signup-form{
+  width: 350px;
+  margin:0 auto;
+  margin-top:1em ;
+}
+div.signup-form h1{
+  text-align: center;
+  margin-bottom: 0.2em;
+}
+
+div.signup-form form{
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+}
+div.signup-form form input{
+  padding: 1em;
+}
+div.signup-form form label{
+  font-size: 1.2em;
+}
+
+div.signup-form form .btn-container{
+  display: flex;
+  gap: 0.2em;
+}
+button{
+  flex: 1;
+  padding: 10px 12px;
+  background-color: none;
+}
