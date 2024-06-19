@@ -1,6 +1,5 @@
 import {Schema,model} from "mongoose";
-import validator from 'express-validator';
-let {isEmail}=validator;
+
 
 const userSchema=new Schema({
     name:{
@@ -13,12 +12,7 @@ const userSchema=new Schema({
         type:String,
         required:[true,"Email field is required"],
         trim:true,
-        validate:{
-            validator:function(value){
-                return isEmail(value)
-            },
-            message:"Email is not proper"
-        }
+        // unique:true
     },
     password:{
         type:String,
