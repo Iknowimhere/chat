@@ -3,6 +3,7 @@ export const Login = () => {
   return (
     <div className='login-form'>
         <form>
+          <h1>Login</h1>
             <label htmlFor="email">Email</label>
             <input type="email" name="email" id="name" />
             <label htmlFor="password">Password</label>
