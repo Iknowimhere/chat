@@ -6,6 +6,7 @@ import { genToken } from "../utils/generateToken.js"
 export const register=asyncHandler(async (req,res)=>{
     const {name,email,password,confirmPassword}=req.body
     const existingUser=await User.findOne({email})
+    console.log(name,email,password,confirmPassword);
     if(existingUser){
         throw new Error("User exists already")
     }
@@ -25,7 +26,11 @@ export const register=asyncHandler(async (req,res)=>{
 //login
 export const login=asyncHandler(async (req,res,next)=>{
     const {email,password}=req.body
-    const existingUser=await User.findOne({email})
+    const existingUser=
+    await User.findOne({email})
+
+
+
     if(!existingUser || !(await existingUser.comparePassword(password,existingUser.password))){
         let err= new Error("No user found,Please Register")
         next(err)

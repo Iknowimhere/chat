@@ -12,7 +12,6 @@ export const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(name, email, password, confirmPassword, pic);
     let formData = new FormData();
     formData.append("name", name);
     formData.append("email", email);
