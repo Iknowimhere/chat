@@ -51,15 +51,15 @@ div.login-form form input{
 div.login-form form label{
   font-size: 1.2em;
 }
-
-div.login-form form .btn-container{
+.buttons{
   display: flex;
-  gap: 0.2em;
+  gap: 0.25em;
 }
-button{
+.buttons button{
   flex: 1;
   padding: 10px 12px;
   background-color: none;
+  font-size: large;
 }
 
 nav{
