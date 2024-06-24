@@ -1,5 +1,6 @@
 import {Schema,model} from "mongoose";
 import bcrypt from 'bcryptjs'
+import validator from 'validator'
 
 
 const userSchema=new Schema({
@@ -12,7 +13,8 @@ const userSchema=new Schema({
     email:{
         type:String,
         required:[true,"Email field is required"],
-        trim:true
+        trim:true,
+        validate:[validator.isEmail,"Enter proper email"]
     },
     password:{
         type:String,

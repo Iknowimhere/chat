@@ -2,6 +2,7 @@ import User from "../models/User.js"
 import asyncHandler from "express-async-handler"
 import { genToken } from "../utils/generateToken.js"
 
+
 //register
 export const register=asyncHandler(async (req,res)=>{
     const {name,email,password,confirmPassword}=req.body
