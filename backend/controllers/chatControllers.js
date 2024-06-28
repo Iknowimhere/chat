@@ -23,9 +23,22 @@ export const accessChat=asyncHandler(async(req,res)=>{
     })
 
     if(isChat.length>0){
-        chatData=isChat[0]
+        res.send(isChat[0])
     }else{
-        
+        var chatData={
+            chatName:"Sender",
+            isGroupChat:false,
+            users:[userId,req.userId]
+        }
     }
+    try {
+        let newChat=await Chat.create(chatData)
 
+        newChat=await Chat.findById(newChat._id).populate("users","name email photo")
+
+        res.send(newChat)
+    } catch (error) {
+        let err=new Error(error.message)
+        next(err)
+    }
 })
