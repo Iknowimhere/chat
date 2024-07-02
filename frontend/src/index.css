@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+.title{
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 5vh;
+}
 div.signup-form{
   width: 350px;
   margin:0 auto;

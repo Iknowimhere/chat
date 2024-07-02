@@ -42,3 +42,18 @@ export const accessChat=asyncHandler(async(req,res)=>{
         next(err)
     }
 })
+
+//@description   fetch all chats for the logged in user
+//@Path          GET /api/v1/chat
+//access         Private 
+export const fetchChats=asyncHandler(async (req,res,next)=>{
+    let chats=await Chat.find({users:{$elemMatch:{$eq:req.userId}}}).populate("users","-password").populate("groupAdmin","-password").populate("latestMessage")
+
+    let finalChats=await Chat.populate(chats,{
+        path:"latestMessage.sender",
+        select:"name email photo"
+    })
+
+    res.status(200).json(finalChats)
+
+}) 

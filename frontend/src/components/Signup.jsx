@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useToast } from '@chakra-ui/react'
 
 export const Signup = () => {
   const navigate=useNavigate();
@@ -9,9 +10,20 @@ export const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [pic, setPic] = useState("");
+  let toast=useToast()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if(!name || !email || !password || !confirmPassword || !pic ){
+       toast({
+        title: `Please fill all the fields`,
+        status: "error",
+        isClosable: true,
+      })
+      return
+    }
+    // if(pic.type!=="image/jpg" ||)
     let formData = new FormData();
     formData.append("name", name);
     formData.append("email", email);
