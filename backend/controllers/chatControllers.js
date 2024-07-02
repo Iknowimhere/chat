@@ -3,7 +3,7 @@ import Chat from "../models/Chat.js";
 
 //@description   Create or fetch one-on-one chat
 //@Path          POST /api/v1/chat
-//access         Private 
+//@access         Private 
 export const accessChat=asyncHandler(async(req,res)=>{
     const {userId}=req.body
 
@@ -45,15 +45,51 @@ export const accessChat=asyncHandler(async(req,res)=>{
 
 //@description   fetch all chats for the logged in user
 //@Path          GET /api/v1/chat
-//access         Private 
+//@access         Private 
 export const fetchChats=asyncHandler(async (req,res,next)=>{
-    let chats=await Chat.find({users:{$elemMatch:{$eq:req.userId}}}).populate("users","-password").populate("groupAdmin","-password").populate("latestMessage")
+    let chats=await Chat.find({users:{$elemMatch:{$eq:req.userId}}}).populate("users","-password").populate("groupAdmin","-password").populate("latestMessage").sort({updatedAt:-1})
 
     let finalChats=await Chat.populate(chats,{
         path:"latestMessage.sender",
         select:"name email photo"
     })
-
     res.status(200).json(finalChats)
-
 }) 
+
+//@description   create group chat
+//@Path          post /api/v1/chat
+//@access         Private 
+
+export const createGroup=asyncHandler(async (req,res,next)=>{
+    if(!req.body.users || !req.body.chatName){
+        res.status(400).json("Please fill all the fields")
+    }
+
+    let users=JSON.parse(req.body.users.replace(/'/g,'"'));
+
+    if(users<2){
+        res.status(400).json("To create a group there should be more than 2 users")
+    }
+
+    users.push(req.userId)
+
+    try {
+        let groupChat=await Chat.create({
+            chatName:req.body.chatName,
+            isGroupChat:true,
+            users:users,
+            groupAdmin:req.userId,
+        })
+
+        groupChat=await Chat.findById(groupChat._id).populate("users","-password -confirmPassword").populate("groupAdmin","-password -confirmPassword").populate("latestMessage")
+
+        groupChat=await Chat.populate(groupChat,{
+            path:"latestMessage.sender",
+            select:"name email photo"
+        })
+        res.status(201).json(groupChat)
+    } catch (error) {
+        let err=new Error(error.message)
+        next(err)
+    }
+})
