@@ -93,3 +93,47 @@ export const createGroup=asyncHandler(async (req,res,next)=>{
         next(err)
     }
 })
+
+//@description   rename group chat
+//@Path          PUT /api/v1/chat
+//@access         Private 
+export const renameGroup=asyncHandler(async(req,res,next)=>{
+    let {chatId,chatName}=req.body
+
+    let updatedChat=await Chat.findByIdAndUpdate(chatId,{chatName},{new:true}).populate("users","-password -confirmPassword").populate("groupAdmin","-password -confirmPassword")
+
+    if(!updatedChat){
+        return res.status(400).json("Chat doesn't exist")
+    }
+    res.status(200).json(updatedChat)
+}) 
+
+//@description   add person to group chat
+//@Path          PUT /api/v1/chat/add
+//@access         Private 
+
+export const addPerson=asyncHandler(async(req,res)=>{
+    let {chatId,userId}=req.body
+
+    let updatedGroup=await Chat.findByIdAndUpdate(chatId,{$push:{users:userId}},{new:true}).populate("users","-password -confirmPassword").populate("groupAdmin","-password -confirmPassword")
+
+    if(!updatedGroup){
+        return res.status(400).json("Chat doesn't exist")
+    }
+    res.status(200).json(updatedGroup)
+})
+
+//@description   remove person from group chat
+//@Path          PUT /api/v1/chat/remove
+//@access         Private 
+
+export const removePerson=asyncHandler(async(req,res)=>{
+    let {chatId,userId}=req.body
+
+    let updatedGroup=await Chat.findByIdAndUpdate(chatId,{$pull:{users:userId}},{new:true}).populate("users","-password -confirmPassword").populate("groupAdmin","-password -confirmPassword")
+
+    if(!updatedGroup){
+        return res.status(400).json("Chat doesn't exist")
+    }
+    res.status(200).json(updatedGroup)
+})
