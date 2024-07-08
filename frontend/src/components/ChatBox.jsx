@@ -6,10 +6,10 @@ import { ChatState } from '../context/ChatContext.jsx'
 
 export const ChatBox = () => {
   let {user}=ChatState()
-  console.log(user);
+  console.log("user",user);
   return (
     <div>
-        <Chatnav/>
+        {user && <Chatnav user={user}/>}
         <Chatusers/>
         <Chat/>
     </div>

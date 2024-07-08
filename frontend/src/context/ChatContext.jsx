@@ -6,11 +6,11 @@ let ChatContext=createContext()
 
 
 let ChatProvider=({children})=>{
-    let [user,setUser]=useState("")
+    let [user,setUser]=useState(null)
     let navigate=useNavigate()
-    
     useEffect(()=>{
         let user=JSON.parse(localStorage.getItem("user"))
+        console.log("user in context api",user);
         if(!user){
             navigate("/",{replace:true})
         }
