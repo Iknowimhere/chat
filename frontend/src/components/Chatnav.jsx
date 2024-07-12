@@ -34,7 +34,8 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const Chatnav = ({ user }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen:isDrawerOpen, onOpen:onDrawerOpen, onClose:onDrawerClose } = useDisclosure();
+  const { isOpen:isModalOpen, onOpen:onModalOpen, onClose:onModalClose } = useDisclosure();
   const btnRef = useRef();
 const navigate=useNavigate();
   const logout=()=>{
@@ -49,13 +50,13 @@ const navigate=useNavigate();
       alignItems={"center"}
       boxShadow={"5px 5px 5px rgba(0,0,0,0.4)"}
     >
-      <Button leftIcon={<SearchIcon />} ref={btnRef} onClick={onOpen}>
+      <Button leftIcon={<SearchIcon />} ref={btnRef} onClick={onDrawerOpen}>
         Search
       </Button>
       <Drawer
-        isOpen={isOpen}
+        isOpen={isDrawerOpen}
         placement="left"
-        onClose={onClose}
+        onClose={onDrawerClose}
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
@@ -68,7 +69,7 @@ const navigate=useNavigate();
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
+            <Button variant="outline" mr={3} onClick={onDrawerClose}>
               Cancel
             </Button>
             <Button colorScheme="blue">Save</Button>
@@ -92,9 +93,9 @@ const navigate=useNavigate();
             <Avatar name={user.data.name} src={user.data.photo} size={"sm"} />
           </MenuButton>
           <MenuList>
-            <MenuItem onClick={onOpen}>Profile</MenuItem>
+            <MenuItem onClick={onModalOpen}>Profile</MenuItem>
 
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Modal isOpen={isModalOpen} onClose={onModalClose}>
         <ModalOverlay />
         <ModalContent textAlign={"center"}>
           <ModalHeader>Profile</ModalHeader>
@@ -105,7 +106,7 @@ const navigate=useNavigate();
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onClose}>
+            <Button colorScheme='blue' mr={3} onClick={onModalOpen}>
               Close
             </Button>
           </ModalFooter>
