@@ -53,18 +53,17 @@ export const searchUsers = asyncHandler(async (req, res, next) => {
     let userId = req.userId;
     let keyword = req.query.search
       ? {
-          or$: [
+          $or: [
             { name: { $regex: req.query.search, $options: "i" } },
             { email: { $regex: req.query.search, $options: "i" } },
           ],
         }
       : {};
+      console.log(req.query.search);
     let users = await User.find(keyword).find({ _id: { $ne: userId } }).exec();
     if (!users) {
       let err = new Error("Users not found");
       next(err);
     }
     res.status(200).json(users);
-     
-    
 });

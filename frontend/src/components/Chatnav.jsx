@@ -14,7 +14,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { BellIcon, ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Menu,
   MenuButton,
@@ -30,17 +30,69 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-} from '@chakra-ui/react'
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from '@chakra-ui/react'
+import axios from "axios";
+import ChatLoading from "./ChatLoading";
+import UserList from "./UserList";
 
 const Chatnav = ({ user }) => {
-  const { isOpen:isDrawerOpen, onOpen:onDrawerOpen, onClose:onDrawerClose } = useDisclosure();
-  const { isOpen:isModalOpen, onOpen:onModalOpen, onClose:onModalClose } = useDisclosure();
+  const [search, setSearch] = useState('');
+  const [searchUsers,setSearchUsers]=useState([]);
+  const [loading,setLoading]=useState(false);
+  const {
+    isOpen: isDrawerOpen,
+    onOpen: onDrawerOpen,
+    onClose: onDrawerClose,
+  } = useDisclosure();
+  const {
+    isOpen: isModalOpen,
+    onOpen: onModalOpen,
+    onClose: onModalClose,
+  } = useDisclosure();
+  const toast=useToast()
   const btnRef = useRef();
-const navigate=useNavigate();
-  const logout=()=>{
-    localStorage.removeItem("user")
-    navigate("/",{replace:true})
+  const navigate = useNavigate();
+
+  const logout = () => {
+    localStorage.removeItem("user");
+    navigate("/", { replace: true });
+  };
+
+
+
+
+  const handleSearch=async ()=>{
+    if(!search){
+      return toast({
+        title: 'Please enter something',
+        status: 'warning',
+        duration: 9000,
+        isClosable: true,
+      })
+    }
+    try {
+      setLoading(true)
+      let config={
+        headers:{
+          'Authorization':`Bearer ${user.token}`
+        }
+      }
+      const {data}=await axios.get(`http://localhost:5000/api/v1/user?search=${search}`,config)
+      console.log(data);
+      setLoading(false)
+      setSearchUsers(data)
+      setSearch('')
+    } catch (error) {
+      toast({
+        title: 'Couldn\'t get users',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+      setLoading(false)
+    }
   }
   return (
     <Box
@@ -65,7 +117,17 @@ const navigate=useNavigate();
           <DrawerHeader>Search users</DrawerHeader>
 
           <DrawerBody>
-            <Input placeholder="Type here..." />
+          <Box display="flex" gap="1em">  <Input
+              placeholder="Search by name or email"
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
+            />
+            <Button onClick={handleSearch}>Go</Button></Box>
+            <Box>
+              {loading?<ChatLoading/>:searchUsers.map(user=>{
+                return <UserList key={user._id} user={user}/>
+              })}
+            </Box>
           </DrawerBody>
 
           <DrawerFooter>
@@ -96,23 +158,33 @@ const navigate=useNavigate();
             <MenuItem onClick={onModalOpen}>Profile</MenuItem>
 
             <Modal isOpen={isModalOpen} onClose={onModalClose}>
-        <ModalOverlay />
-        <ModalContent textAlign={"center"}>
-          <ModalHeader>Profile</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"} gap={"1em"}>
-            <Text fontSize={"2xl"}>{user.data.email}</Text>
-            <Avatar name={user.data.name} src={user.data.photo} size="2xl" />
-          </ModalBody>
+              <ModalOverlay />
+              <ModalContent textAlign={"center"}>
+                <ModalHeader>Profile</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody
+                  display={"flex"}
+                  flexDirection={"column"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  gap={"1em"}
+                >
+                  <Text fontSize={"2xl"}>{user.data.email}</Text>
+                  <Avatar
+                    name={user.data.name}
+                    src={user.data.photo}
+                    size="2xl"
+                  />
+                </ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onModalOpen}>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-            <MenuDivider/>
+                <ModalFooter>
+                  <Button colorScheme="blue" mr={3} onClick={onModalOpen}>
+                    Close
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+            <MenuDivider />
             <MenuItem onClick={logout}>Logout</MenuItem>
           </MenuList>
         </Menu>
