@@ -1,11 +1,20 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { Box, Button, Stack, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ChatState } from "../context/ChatContext";
+import { getuserName } from "../config/Chatlogics";
 
 export const Chatusers = () => {
+  let [loggedUser,setLoggedUser]=useState(null)
   const { chats, setChats, selectedChat, setSelectedChat } = ChatState();
-  console.log("CHATS IN CHATuSERS",chats);
+
+  useEffect(() => {
+      let user = JSON.parse(localStorage.getItem("user"));
+      setLoggedUser(user);
+    }, []);
+    // setLoggedUser(JSON.parse(localStorage.getItem("user")));
+
+
   return (
     <Box
       width="40%"
@@ -40,7 +49,7 @@ export const Chatusers = () => {
                   _hover={{ backgroundColor: "#ddd" }}
                   cursor="pointer"
                 >
-                  <Text fontWeight="bold">{chat.chatName}</Text>
+                  <Text fontWeight="bold">{chat.isGroupChat?chat.chatName:getuserName(loggedUser.data._id,chat.users)}</Text>
                 </Box>
               );
             })
