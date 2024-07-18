@@ -1,17 +1,20 @@
 import React from 'react'
 import { Chatusers } from './Chatusers'
-import { Chat } from './Chat'
+import { ChatWindow } from './ChatWindow.jsx'
 import Chatnav from './Chatnav'
 import { ChatState } from '../context/ChatContext.jsx'
+import { Box } from '@chakra-ui/react'
 
 export const ChatBox = () => {
-  let {user}=ChatState()
+  let {user}=ChatState();
   console.log("user",user);
   return (
     <div>
-        {user && <Chatnav user={user}/>}
-        <Chatusers/>
-        <Chat/>
+        {user && <Chatnav/>}
+        <Box display={"flex"}>
+          {user && <Chatusers/>}
+          {user && <ChatWindow/>}
+        </Box>
     </div>
   )
 }

@@ -14,7 +14,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { BellIcon, ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   Menu,
   MenuButton,
@@ -32,15 +32,17 @@ import {
   ModalCloseButton,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { useToast } from '@chakra-ui/react'
+import { useToast } from "@chakra-ui/react";
 import axios from "axios";
 import ChatLoading from "./ChatLoading";
 import UserList from "./UserList";
+import { ChatState } from "../context/ChatContext";
 
-const Chatnav = ({ user }) => {
-  const [search, setSearch] = useState('');
-  const [searchUsers,setSearchUsers]=useState([]);
-  const [loading,setLoading]=useState(false);
+const Chatnav = () => {
+  const [search, setSearch] = useState("");
+  const [searchUsers, setSearchUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const { user, chats, setChats, selectedChat, setSelectedChat } = ChatState();
   const {
     isOpen: isDrawerOpen,
     onOpen: onDrawerOpen,
@@ -51,7 +53,7 @@ const Chatnav = ({ user }) => {
     onOpen: onModalOpen,
     onClose: onModalClose,
   } = useDisclosure();
-  const toast=useToast()
+  const toast = useToast();
   const btnRef = useRef();
   const navigate = useNavigate();
 
@@ -60,40 +62,69 @@ const Chatnav = ({ user }) => {
     navigate("/", { replace: true });
   };
 
-
-
-
-  const handleSearch=async ()=>{
-    if(!search){
-      return toast({
-        title: 'Please enter something',
-        status: 'warning',
-        duration: 9000,
-        isClosable: true,
-      })
-    }
+  const accessChat = async (id) => {
     try {
-      setLoading(true)
-      let config={
-        headers:{
-          'Authorization':`Bearer ${user.token}`
-        }
-      }
-      const {data}=await axios.get(`http://localhost:5000/api/v1/user?search=${search}`,config)
+      let config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      let { data } = await axios.post(
+        `http://localhost:5000/api/v1/chat/`,
+        { userId: id },
+        config
+      );
       console.log(data);
-      setLoading(false)
-      setSearchUsers(data)
-      setSearch('')
+      // if chat already exists in chats no need to add it otherwise add it
+      if (chats.find((chat) => chat._id !== data._id))
+        setChats([...chats, data]);
+      setSelectedChat(data);
+      setLoading(false);
+      onDrawerClose();
     } catch (error) {
       toast({
-        title: 'Couldn\'t get users',
-        status: 'error',
+        title: "Couldn't access chat",
+        status: "error",
         duration: 9000,
         isClosable: true,
-      })
-      setLoading(false)
+      });
     }
-  }
+  };
+
+  const handleSearch = async () => {
+    if (!search) {
+      return toast({
+        title: "Please enter something",
+        status: "warning",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+    try {
+      setLoading(true);
+      let config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      const { data } = await axios.get(
+        `http://localhost:5000/api/v1/user?search=${search}`,
+        config
+      );
+      console.log(data);
+      setLoading(false);
+      setSearchUsers(data);
+      setSearch("");
+    } catch (error) {
+      toast({
+        title: "Couldn't get users",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      setLoading(false);
+    }
+  };
   return (
     <Box
       display="flex"
@@ -117,16 +148,29 @@ const Chatnav = ({ user }) => {
           <DrawerHeader>Search users</DrawerHeader>
 
           <DrawerBody>
-          <Box display="flex" gap="1em">  <Input
-              placeholder="Search by name or email"
-              onChange={(e) => setSearch(e.target.value)}
-              value={search}
-            />
-            <Button onClick={handleSearch}>Go</Button></Box>
+            <Box display="flex" gap="1em">
+              {" "}
+              <Input
+                placeholder="Search by name or email"
+                onChange={(e) => setSearch(e.target.value)}
+                value={search}
+              />
+              <Button onClick={handleSearch}>Go</Button>
+            </Box>
             <Box>
-              {loading?<ChatLoading/>:searchUsers.map(user=>{
-                return <UserList key={user._id} user={user}/>
-              })}
+              {loading ? (
+                <ChatLoading />
+              ) : (
+                searchUsers.map((user) => {
+                  return (
+                    <UserList
+                      key={user._id}
+                      user={user}
+                      handleFunction={() => accessChat(user._id)}
+                    />
+                  );
+                })
+              )}
             </Box>
           </DrawerBody>
 
