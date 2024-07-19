@@ -11,8 +11,7 @@ export const Chatusers = () => {
   const { user,chats, setChats, selectedChat, setSelectedChat } = ChatState();
 
 let toast=useToast()
-  console.log("user is user list",user);
-
+console.log("chats in fetch",chats);
     const fetchChats=async ()=>{
       try {
         let config = {
@@ -21,8 +20,7 @@ let toast=useToast()
           },
         };
         let {data}=await axios.get("http://localhost:5000/api/v1/chat",config)
-        console.log(data);
-        setChats([...chats,data])
+        setChats(data)
       } catch (error) {
         toast({
           title: "Couldn't fetch chats",
@@ -60,13 +58,13 @@ let toast=useToast()
         </Button>
       </Box>
       <Box>
-        <Stack display="flex" flexDirection="column" gap="2em">
+        <Stack display="flex" flexDirection="column" marginTop="1em">
           {
             chats.map((chat) => {
+              console.log("single chat ",chat);
               return (
                 <Box
                   key={chat._id}
-                  marginTop="1em"
                   borderRadius="0.5em"
                   padding="1em"
                   backgroundColor="teal"
