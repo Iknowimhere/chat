@@ -5,6 +5,7 @@ import { ChatState } from "../context/ChatContext";
 import { getuserName } from "../config/Chatlogics";
 import { useToast } from "@chakra-ui/react";
 import axios from "axios";
+import GroupChatModal from "./GroupChatModal";
 
 export const Chatusers = () => {
   let [loggedUser,setLoggedUser]=useState(null)
@@ -42,7 +43,7 @@ console.log("chats in fetch",chats);
   return (
     <Box
       width="40%"
-      height="100%"
+      minHeight="85vh"
       boxShadow="0 5px 5px 5px rgba(0,0,0,0.4)"
       padding="1em"
       marginTop="1em"
@@ -53,9 +54,11 @@ console.log("chats in fetch",chats);
         <Text size="lg" fontWeight="bold">
           My Chats
         </Text>
+        <GroupChatModal>
         <Button iconSpacing="2" rightIcon={<AddIcon />}>
           New Group Chat
         </Button>
+        </GroupChatModal>
       </Box>
       <Box>
         <Stack display="flex" flexDirection="column" marginTop="1em">
