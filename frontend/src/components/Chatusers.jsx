@@ -3,17 +3,43 @@ import { Box, Button, Stack, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { ChatState } from "../context/ChatContext";
 import { getuserName } from "../config/Chatlogics";
+import { useToast } from "@chakra-ui/react";
+import axios from "axios";
 
 export const Chatusers = () => {
   let [loggedUser,setLoggedUser]=useState(null)
-  const { chats, setChats, selectedChat, setSelectedChat } = ChatState();
+  const { user,chats, setChats, selectedChat, setSelectedChat } = ChatState();
 
-  useEffect(() => {
+let toast=useToast()
+  console.log("user is user list",user);
+
+    const fetchChats=async ()=>{
+      try {
+        let config = {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        };
+        let {data}=await axios.get("http://localhost:5000/api/v1/chat",config)
+        console.log(data);
+        setChats([...chats,data])
+      } catch (error) {
+        toast({
+          title: "Couldn't fetch chats",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        })
+      }
+    }
+
+    useEffect(() => {
       let user = JSON.parse(localStorage.getItem("user"));
       setLoggedUser(user);
-    }, []);
-    // setLoggedUser(JSON.parse(localStorage.getItem("user")));
-
+      if(user){
+        fetchChats()
+      }
+    }, [user]);
 
   return (
     <Box
