@@ -64,19 +64,19 @@ console.log("chats in fetch",chats);
         <Stack display="flex" flexDirection="column" marginTop="1em">
           {
             chats.map((chat) => {
-              console.log("single chat ",chat);
               return (
                 <Box
                   key={chat._id}
                   borderRadius="0.5em"
                   padding="1em"
-                  backgroundColor="teal"
-                  color="white"
+                  backgroundColor={selectedChat === chat._id ? "transparent" : "teal"}
+                  color={selectedChat === chat._id ? "black" : "white"}
                   fontWeight="bold"
-                  _hover={{ backgroundColor: "#ddd" }}
+                  _hover={{ backgroundColor: "teal.500",color:"white" }}
                   cursor="pointer"
+                  onClick={() => setSelectedChat(chat)}
                 >
-                  <Text fontWeight="bold">{chat.isGroupChat?chat.chatName:getuserName(loggedUser.data._id,chat.users)}</Text>
+                  <Text fontWeight="bold">{chat.isGroupChat?chat.chatName:getuserName(user.data._id,chat.users)}</Text>
                 </Box>
               );
             })

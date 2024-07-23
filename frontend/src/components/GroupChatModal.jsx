@@ -65,6 +65,42 @@ const GroupChatModal = ({ children }) => {
     }
   };
 
+  const groupHandler=async ()=>{
+    let config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+    let body={
+      chatName:groupName,
+      users:JSON.stringify(selectedUsers.map(u=>{
+        return u._id
+      })),
+    }
+    let {data}=await axios.post("http://localhost:5000/api/v1/chat/group",body,config)
+      onClose()
+      setChats([...chats,data])
+      setGroupName("")
+      setSelectedUsers([])
+      setSearch("")
+      setSearchUsers([])
+      toast({
+        title:"Group created successfully",
+        status:"success",
+        duration:5000,
+        isClosable:true
+      })
+    .catch((error)=>{
+      toast({
+        title:"Couldn't create group",
+        status:error.response.data.message,
+        duration:5000,
+        isClosable:true
+      })
+    })
+  }
+
   return (
     <>
       <span onClick={onOpen}>{children}</span>
@@ -118,8 +154,8 @@ const GroupChatModal = ({ children }) => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+            <Button colorScheme="blue" mr={3} onClick={groupHandler}>
+              Create Group
             </Button>
           </ModalFooter>
         </ModalContent>
