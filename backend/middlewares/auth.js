@@ -3,7 +3,6 @@ import User from '../models/User.js';
 import asyncHandler from 'express-async-handler';
 const auth = asyncHandler(async (req, res, next) => {
   const testToken = req.headers.authorization;
-  console.log(testToken);
   let token;
   if (testToken || testToken?.startsWith("Bearer")) {
     token = testToken.split(" ")[1];

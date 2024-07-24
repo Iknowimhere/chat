@@ -10,7 +10,7 @@ export const register = asyncHandler(async (req, res) => {
   if (existingUser) {
     throw new Error("User exists already");
   }
-  const newUser = await User.create({
+  let newUser = await User.create({
     name,
     email,
     password,
@@ -38,7 +38,7 @@ export const login = asyncHandler(async (req, res, next) => {
     let err = new Error("No user found,Please Register");
     next(err);
   }
-  existingUser=await User.findById(existingUser._id).select({password:0,confirmPassword:0})
+  existingUser=await User.findById(existingUser?._id).select({password:0,confirmPassword:0})
   let token = await genToken(existingUser._id);
   res.status(200).json({
     status: "Success",
