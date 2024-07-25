@@ -5,7 +5,7 @@ import { accessChat, addPerson, createGroup, fetchChats, removePerson, renameGro
 let chatRouter=Router()
 
 chatRouter.post("/",auth,accessChat);
-chatRouter.get("/",auth,fetchChats);
+chatRouter.get("/",fetchChats);
 chatRouter.post("/group",auth,createGroup);
 chatRouter.put("/group",auth,renameGroup);
 chatRouter.put("/group/add",auth,addPerson);

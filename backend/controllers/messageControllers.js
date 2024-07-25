@@ -20,6 +20,11 @@ export const createMessage=expressAsyncHandler(async(req,res)=>{
         message=await message.populate("sender","name email photo")
         message=await message.populate("chat")
 
+        message=await message.populate({
+            path:"chat.users",
+            select:"name email photo"
+        })
+
         await Chat.findByIdAndUpdate(chat,{
             latestMessage:message
         })

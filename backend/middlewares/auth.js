@@ -2,7 +2,8 @@ import jwt from 'jsonwebtoken'
 import User from '../models/User.js';
 import asyncHandler from 'express-async-handler';
 const auth = asyncHandler(async (req, res, next) => {
-  const testToken = req.headers.authorization;
+  try {
+    const testToken = req.headers.authorization;
   let token;
   if (testToken || testToken?.startsWith("Bearer")) {
     token = testToken.split(" ")[1];
@@ -16,6 +17,9 @@ const auth = asyncHandler(async (req, res, next) => {
   }
   req.userId = user._id;
   next();
+  } catch (error) {
+    res.status(401).json(error.message);
+  }
 });
 
 export default auth;

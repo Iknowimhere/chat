@@ -39,7 +39,7 @@ export const login = asyncHandler(async (req, res, next) => {
     next(err);
   }
   existingUser=await User.findById(existingUser?._id).select({password:0,confirmPassword:0})
-  let token = await genToken(existingUser._id);
+  let token = await genToken(existingUser?._id);
   res.status(200).json({
     status: "Success",
     data: existingUser,
