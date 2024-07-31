@@ -25,8 +25,7 @@ export const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(name,email,password,confirmPassword,pic);
-    if (!name || !email || !password || !confirmPassword || !pic) {
+    if (!name || !email || !password || !confirmPassword) {
       toast({
         title: `Please fill all the fields`,
         status: "error",
@@ -40,7 +39,6 @@ export const Signup = () => {
     formData.append("email", email);
     formData.append("password", password);
     formData.append("confirmPassword", confirmPassword);
-    formData.append("photo", pic);
 
     let { data } = await axios.post(
       "http://localhost:5000/api/v1/user/register",

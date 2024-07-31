@@ -3,11 +3,12 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Button, Input, Toast } from "@chakra-ui/react";
 import { useToast } from '@chakra-ui/react'
+import { ChatState } from "../context/ChatContext";
 export const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+const {user,setUser}=ChatState()
   const toast=useToast();
 
   const handleSubmit = async (e) => {
@@ -26,6 +27,7 @@ export const Login = () => {
         },
       }
     );
+    setUser(data)
     localStorage.setItem("user", JSON.stringify(data));
     toast({
       title: 'Login successful',

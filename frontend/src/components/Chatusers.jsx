@@ -12,7 +12,7 @@ export const Chatusers = () => {
   const { user,chats, setChats, selectedChat, setSelectedChat } = ChatState();
 
 let toast=useToast()
-console.log("chats in fetch",chats);
+// console.log(chats);
     const fetchChats=async ()=>{
       try {
         let config = {
@@ -21,6 +21,7 @@ console.log("chats in fetch",chats);
           },
         };
         let {data}=await axios.get("http://localhost:5000/api/v1/chat",config)
+        console.log(data);
         setChats(data)
       } catch (error) {
         toast({
@@ -62,8 +63,8 @@ console.log("chats in fetch",chats);
       </Box>
       <Box>
         <Stack display="flex" flexDirection="column" marginTop="1em">
-          {
-            chats.map((chat) => {
+          {Array.isArray(chats)&&
+            chats?.map((chat) => {
               return (
                 <Box
                   key={chat._id}
