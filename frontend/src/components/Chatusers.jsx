@@ -11,6 +11,26 @@ export const Chatusers = () => {
   let [loggedUser, setLoggedUser] = useState(null);
   const { user, chats, setChats, selectedChat, setSelectedChat } = ChatState();
 
+let toast=useToast()
+// console.log(chats);
+    const fetchChats=async ()=>{
+      try {
+        let config = {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        };
+        let {data}=await axios.get("http://localhost:5000/api/v1/chat",config)
+        console.log(data);
+        setChats(data)
+      } catch (error) {
+        toast({
+          title: "Couldn't fetch chats",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        })
+      }
   let toast = useToast();
   const fetchChats = async () => {
     try {

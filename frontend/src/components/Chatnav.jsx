@@ -76,14 +76,15 @@ const Chatnav = () => {
       );
       console.log(data);
       // if chat already exists in chats no need to add it otherwise add it
-      if (!chats.find((chat) => chat._id === data._id))
-        setChats([...chats, data]);
+      if (Array.isArray(chats) && chats?.find((chat) => chat._id === data._id))
+      setChats([...chats, data]);
       setSelectedChat(data);
       setLoading(false);
       onDrawerClose();
     } catch (error) {
       toast({
         title: "Couldn't access chat",
+        description:error.message,
         status: "error",
         duration: 9000,
         isClosable: true,

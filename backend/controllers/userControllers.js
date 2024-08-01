@@ -60,6 +60,7 @@ export const searchUsers = asyncHandler(async (req, res, next) => {
         }
       : {};
     let users = await User.find(keyword).find({ _id: { $ne: userId } }).exec();
+    console.log(users);
     if (!users) {
       let err = new Error("Users not found");
       next(err);
