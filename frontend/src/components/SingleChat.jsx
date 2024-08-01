@@ -50,12 +50,9 @@ const SingleChat = () => {
     fetchMessages();
   }, [selectedChat]);
   const sendMessage = async (e) => {
-    if (!messageValue) {
-      return;
-    }
     try {
       setLoading(true);
-      if (e.key == "Enter") {
+      if (e.key == "Enter" && messageValue) {
         let config = {
           Headers: {
             "content-type": "application/json",
