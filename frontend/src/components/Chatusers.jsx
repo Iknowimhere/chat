@@ -10,28 +10,8 @@ import GroupChatModal from "./GroupChatModal";
 export const Chatusers = () => {
   let [loggedUser, setLoggedUser] = useState(null);
   const { user, chats, setChats, selectedChat, setSelectedChat } = ChatState();
-
-let toast=useToast()
-// console.log(chats);
-    const fetchChats=async ()=>{
-      try {
-        let config = {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        };
-        let {data}=await axios.get("http://localhost:5000/api/v1/chat",config)
-        console.log(data);
-        setChats(data)
-      } catch (error) {
-        toast({
-          title: "Couldn't fetch chats",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        })
-      }
   let toast = useToast();
+
   const fetchChats = async () => {
     try {
       let config = {
@@ -84,29 +64,30 @@ let toast=useToast()
       </Box>
       <Box>
         <Stack display="flex" flexDirection="column" marginTop="1em">
-          {Array.isArray(chats) && chats?.map((chat) => {
-            return (  
-              <Box
-                key={chat._id}
-                borderRadius="0.5em"
-                padding="1em"
-                backgroundColor={
-                  selectedChat === chat._id ? "transparent" : "teal"
-                }
-                color={selectedChat === chat._id ? "black" : "white"}
-                fontWeight="bold"
-                _hover={{ backgroundColor: "teal.500", color: "white" }}
-                cursor="pointer"
-                onClick={() => setSelectedChat(chat)}
-              >
-                <Text fontWeight="bold">
-                  {chat.isGroupChat
-                    ? chat.chatName
-                    : getuserName(user.data._id, chat.users)}
-                </Text>
-              </Box>
-            );
-          })}
+          {Array.isArray(chats) &&
+            chats?.map((chat) => {
+              return (
+                <Box
+                  key={chat._id}
+                  borderRadius="0.5em"
+                  padding="1em"
+                  backgroundColor={
+                    selectedChat === chat._id ? "transparent" : "teal"
+                  }
+                  color={selectedChat === chat._id ? "black" : "white"}
+                  fontWeight="bold"
+                  _hover={{ backgroundColor: "teal.500", color: "white" }}
+                  cursor="pointer"
+                  onClick={() => setSelectedChat(chat)}
+                >
+                  <Text fontWeight="bold">
+                    {chat.isGroupChat
+                      ? chat.chatName
+                      : getuserName(user.data._id, chat.users)}
+                  </Text>
+                </Box>
+              );
+            })}
         </Stack>
       </Box>
     </Box>
