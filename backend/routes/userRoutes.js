@@ -4,7 +4,7 @@ import upload from '../middlewares/uploadFile.js';
 import auth from '../middlewares/auth.js';
 let userRouter=Router()
 
-userRouter.post("/register",upload.single("photo"),register)
+userRouter.post("/register",register)
 userRouter.post("/login",login)
 
 userRouter.get("/",auth,searchUsers)

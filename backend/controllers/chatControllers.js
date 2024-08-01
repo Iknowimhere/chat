@@ -47,21 +47,19 @@ export const accessChat=asyncHandler(async(req,res)=>{
 //@Path          GET /api/v1/chat
 //@access         Private 
 export const fetchChats=asyncHandler(async (req,res,next)=>{
-    console.log("hello")
-    res.send("fetch chats")
-//     try {
-//         let chats=await Chat.find({users:{$elemMatch:{$eq:req.userId}}}).populate("users","-password -confirmPassword").populate("groupAdmin","-password -confirmPassword").populate("latestMessage").sort({updatedAt:-1})
-// if(chats.length===0){
-//     return res.status(200).json("No chats found")
-// }
-//     let finalChats=await Chat.populate(chats,{
-//         path:"latestMessage.sender",
-//         select:"name email photo"
-//     })
-//     res.status(200).json(finalChats)
-//     } catch (error) {
-//         res.status(400).json(error.message)
-//     }
+    try {
+        let chats=await Chat.find({users:{$elemMatch:{$eq:req.userId}}}).populate("users","-password -confirmPassword").populate("groupAdmin","-password -confirmPassword").populate("latestMessage").sort({updatedAt:-1})
+if(chats.length===0){
+    return res.status(200).json("No chats found")
+}
+    let finalChats=await Chat.populate(chats,{
+        path:"latestMessage.sender",
+        select:"name email photo"
+    })
+    res.status(200).json(finalChats)
+    } catch (error) {
+        res.status(400).json(error.message)
+    }
 }
 ) 
 

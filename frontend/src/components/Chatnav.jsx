@@ -77,7 +77,7 @@ const Chatnav = () => {
       console.log(data);
       // if chat already exists in chats no need to add it otherwise add it
       if (!chats.find((chat) => chat._id === data._id))
-      setChats([...chats, data]);
+        setChats([...chats, data]);
       setSelectedChat(data);
       setLoading(false);
       onDrawerClose();
@@ -111,7 +111,6 @@ const Chatnav = () => {
         `http://localhost:5000/api/v1/user?search=${search}`,
         config
       );
-      console.log(data);
       setLoading(false);
       setSearchUsers(data);
       setSearch("");
@@ -222,7 +221,7 @@ const Chatnav = () => {
                 </ModalBody>
 
                 <ModalFooter>
-                  <Button colorScheme="blue" mr={3} onClick={onModalOpen}>
+                  <Button colorScheme="blue" mr={3} onClick={onModalClose}>
                     Close
                   </Button>
                 </ModalFooter>

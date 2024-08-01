@@ -18,15 +18,14 @@ export const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [pic, setPic] = useState("");
-  const [show, setShow] =useState(false);
+  const [show, setShow] = useState(false);
   let toast = useToast();
-  
+
   const handleClick = () => setShow(!show);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(name,email,password,confirmPassword,pic);
-    if (!name || !email || !password || !confirmPassword || !pic) {
+    if (!name || !email || !password || !confirmPassword) {
       toast({
         title: `Please fill all the fields`,
         status: "error",
@@ -47,17 +46,17 @@ export const Signup = () => {
       formData,
       {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
       }
     );
     localStorage.setItem("user", JSON.stringify(data));
     toast({
-      title: 'Registered successfully',
-      status: 'success',
+      title: "Registered successfully",
+      status: "success",
       duration: 9000,
       isClosable: true,
-    })
+    });
     navigate("/chats", { replace: true });
   };
   return (
@@ -82,23 +81,23 @@ export const Signup = () => {
         />
         <label htmlFor="password">Password</label>
         <InputGroup>
-        <Input
-          type={show?"text":"password"}
-          name="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <InputRightElement width="4.5rem">
+          <Input
+            type={show ? "text" : "password"}
+            name="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <InputRightElement width="4.5rem">
             <Button h="1.75rem" size="sm" onClick={handleClick}>
               {show ? "Hide" : "Show"}
             </Button>
           </InputRightElement>
         </InputGroup>
-          <label htmlFor="confirmPassword">Confirm Password</label>
+        <label htmlFor="confirmPassword">Confirm Password</label>
         <InputGroup>
           <Input
-            type={show?"text":"password"}
+            type={show ? "text" : "password"}
             name="confirmPassword"
             id="confirmPassword"
             value={confirmPassword}
