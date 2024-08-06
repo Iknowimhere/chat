@@ -10,8 +10,10 @@ import {
   InputRightElement,
   VStack,
 } from "@chakra-ui/react";
+import { ChatState } from "../context/ChatContext";
 
 export const Signup = () => {
+  const { setUser } = ChatState();
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -49,6 +51,7 @@ export const Signup = () => {
         },
       }
     );
+    setUser(data);
     localStorage.setItem("user", JSON.stringify(data));
     toast({
       title: "Registered successfully",

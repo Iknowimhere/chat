@@ -7,7 +7,7 @@ import { useToast } from "@chakra-ui/react";
 import axios from "axios";
 import GroupChatModal from "./GroupChatModal";
 
-export const Chatusers = () => {
+export const Chatusers = ({ fetchAgain }) => {
   let [loggedUser, setLoggedUser] = useState(null);
   const { user, chats, setChats, selectedChat, setSelectedChat } = ChatState();
   let toast = useToast();
@@ -36,11 +36,10 @@ export const Chatusers = () => {
 
   useEffect(() => {
     let user = JSON.parse(localStorage.getItem("user"));
-    setLoggedUser(user);
     if (user) {
       fetchChats();
     }
-  }, []);
+  }, [fetchAgain]);
 
   return (
     <Box

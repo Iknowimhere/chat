@@ -33,9 +33,7 @@ export const accessChat=asyncHandler(async(req,res)=>{
     }
     try {
         let newChat=await Chat.create(chatData)
-
         newChat=await Chat.findById(newChat._id).populate("users","name email photo")
-
         res.send(newChat)
     } catch (error) {
         let err=new Error(error.message)
